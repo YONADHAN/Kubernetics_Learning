@@ -4,10 +4,10 @@
 2. app.ts       done
         │
         ▼
-3. config/
+3. config/     .env done, logger.ts done, calculator.ts done, => done
         │
         ▼
-4. utils/
+4. utils/      
         │
         ▼
 5. services/

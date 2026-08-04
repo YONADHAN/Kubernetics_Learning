@@ -1,8 +1,8 @@
 import type {Express} from 'express';
 import type {Server as HttpServer} from 'http';
-
+import { env } from './config/env';
 import { App } from './app';
-
+import { logger } from './config/logger';
 
 export class Server {
     private readonly app: Express;
@@ -16,7 +16,8 @@ export class Server {
 
     public start(port: number): void {
         this.httpServer = this.app.listen(port, () => {
-            console.log(`API Gateway is running on port ${port}`)
+            
+            logger.info(`API Gateway running on port ${port}`);
         });
     };
 
@@ -35,4 +36,4 @@ export class Server {
 
 const server = new Server();
 
-server.start(3000)
+server.start(env.PORT)

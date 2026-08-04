@@ -4,3 +4,5 @@ export interface Environment {
     CALCULATOR_SERVICE_URL: string;
     REQUEST_TIMEOUT: number;
 }
+
+
