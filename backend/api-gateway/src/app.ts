@@ -1,37 +1,49 @@
-import express , {type Express} from 'express';
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+
+import calculationRoutes from "./routes/calculation.routes";
+import healthRoutes from "./routes/health.routes";
+
+import { correlationId } from "./middlewares/correlationId";
+import { requestLogger } from "./middlewares/requestLogger";
+import { notFound } from "./middlewares/notFound";
+import { errorHandler } from "./middlewares/errorHandler";
 
 export class App {
-    private readonly app: Express;
+  private readonly app = express();
 
-    constructor(){
-        this.app = express();
+  constructor() {
+    this.initializeMiddlewares();
+    this.initializeRoutes();
+    this.initializeErrorHandling();
+  }
 
-        this.initializeMiddlewares();
-        this.initializeRoutes();
-        this.initializeErrorHandlers();
-    }
+  private initializeMiddlewares(): void {
+    this.app.use(helmet());
 
-    public getApp(): Express {
-        return this.app;
-    }
+    this.app.use(cors());
 
-    private initializeMiddlewares():void{
+    this.app.use(express.json());
 
-    }
+    this.app.use(correlationId);
 
+    this.app.use(requestLogger);
+  }
 
-    private initializeRoutes(): void {
+  private initializeRoutes(): void {
+    this.app.use("/api/v1", calculationRoutes);
 
-        this.app.get("/health",(_, res) => {
-            res.status(200).json({
-                success: true,
-                message: "API Gateway is running",
-            })
-        })
-        
-    }
+    this.app.use("/", healthRoutes);
+  }
 
-    private initializeErrorHandlers(): void {
+  private initializeErrorHandling(): void {
+    this.app.use(notFound);
 
-    }
+    this.app.use(errorHandler);
+  }
+
+  public getApp() {
+    return this.app;
+  }
 }
