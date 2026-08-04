@@ -1,0 +1,1 @@
+export type Operations = "add" | "sub" | "mul" | "div";
