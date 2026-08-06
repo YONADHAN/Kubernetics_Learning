@@ -2,17 +2,18 @@ import { consumer } from "./Consumer";
 
 import { Queues } from "./topology/queues";
 
-import { pendingRequestStore } from "./PendingRequestStore";
+import { pendingRequestStore } from "../services/PendingRequestStore";
 
 import { logger } from "../config/logger";
 
 import type { CalculationResult } from "./types/CalculationResult";
+import { calculationResultSchema } from "../validators/calculationResultSchema";
 
 export class ResultConsumer {
   public async start(): Promise<void> {
     await consumer.consume<CalculationResult>({
       queue: Queues.RESULT_FINAL,
-
+      schema: calculationResultSchema,
       handler: async (
         message,
         correlationId
